@@ -17,9 +17,9 @@
     mkdir names_data
     wget http://www.ssa.gov/oact/babynames/state/namesbystate.zip
 
-    cd data && unzip ../namesbystate.zip
+    cd names_data && unzip ../namesbystate.zip
 
-    cd ..
+    cd ../src
     python -m names.util.import_state_data ~/projects/names_demo/names_data/
 
 ### Run the web server
