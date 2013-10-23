@@ -1,4 +1,5 @@
 .idea
 *.pyc
-data
+*.zip
+names_data
 build

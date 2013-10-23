@@ -14,13 +14,13 @@
 
 ### Load some data
 
-    mkdir data
+    mkdir names_data
     wget http://www.ssa.gov/oact/babynames/state/namesbystate.zip
 
-    cd data && unzip namesbystate.zip
+    cd data && unzip ../namesbystate.zip
 
     cd ..
-    python -m names.util.import_state_data ~/projects/names_demo/data/
+    python -m names.util.import_state_data ~/projects/names_demo/names_data/
 
 ### Run the web server
 
