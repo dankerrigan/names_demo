@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Name Explorer</title>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="/static/css/nv.d3.min.css">
+    <link rel="stylesheet" href="/static/css/graph.css">
+
+</head>
+<body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#historical">Historical</a></li>
+                    <li><a href="#state">State Search</a></li>
+                    <li><a href="#states">All States</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <div class="container">
+        <div>
+            <label for="year_range">Year Range:</label>
+            <input type="text" id="year_range" style="border: 0; color: #f6931f; font-weight: bold;" />
+            <div id="slider_year_range"></div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="container">
+        <form class="well form-search" id="query-form">
+            <div class="ui-widget">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <input type="checkbox" id="make_favorite">
+                    </span>
+                    <input type="text" class="form-control" id="name_field">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <div id="data_graph">
+            <svg></svg>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <table id="state_history">
+
+        </table>
+    </div>
+
+    <script src="//code.jquery.com/jquery.js"></script>
+    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="//d3js.org/d3.v3.js"></script>
+    <script src="static/js/nv.d3.min.js"></script>
+    <script src="/static/js/line_chart.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

@@ -31,9 +31,9 @@
 
     curl http://localhost:5000/search/Dan
 
-### Get name usage for all years in system
+### Get name usage for for (1) N previous yeras
 
-    curl http://localhost:5000/usage/Daniel
+    curl http://localhost:5000/usage/Daniel/years/1
 
 ### Get the top or bottom N (1) names data for a State (WV)
 

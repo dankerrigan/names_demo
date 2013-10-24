@@ -3,7 +3,7 @@ __author__ = 'dankerrigan'
 from flask import Flask, render_template, redirect, url_for, g
 
 from riakjson.query import ASCENDING, DESCENDING
-from ..data.name_data import NameData
+from ..data.name_data import NameData, MAX_YEAR
 from ..data.user_data import UserData
 
 
@@ -27,9 +27,9 @@ def name_search(name_prefix):
 
     return render_template('generic.json', data=result)
 
-@app.route('/usage/<name>')
-def name_usage(name):
-    result = g.names.name_usage(name)
+@app.route('/usage/<name>/years/<years>')
+def name_usage(name, years):
+    result = g.names.name_usage(name, start_year=MAX_YEAR-int(years)+1)
 
     return render_template('generic.json', data=result)
 

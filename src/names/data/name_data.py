@@ -36,6 +36,21 @@ class NameData(object):
 
         return names
 
+    def _rank(self, data):
+        min, max = 999, 0
+        for key, value in data.items():
+            if value > max:
+                max = value
+            if value < min:
+                min = value
+
+        ranked = dict()
+
+        for key, value in data.items():
+            ranked[key] = value/max
+
+        return ranked
+
 
     def _print_result(self, data):
         for item in data:

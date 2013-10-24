@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     count = 0
     for i, record in enumerate(directory_reader(state_file_path)):
-        if record.year > 2011:
+        if record.year > 1950 and record.year < 2012 :
             count += 1
             names.insert(record._asdict())
             sys.stdout.write('{0:10d}\r'.format(count))
