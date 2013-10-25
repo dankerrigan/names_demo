@@ -2,7 +2,7 @@ __author__ = 'dankerrigan'
 
 from riakjson.client import Client
 from riakjson.query import Query
-from riakjson.query import ASCENDING, DESCENDING, and_args, eq, between, regex
+from riakjson.query import ASCENDING, DESCENDING, and_args, eq, gte, lte, regex
 
 from states import states
 
@@ -57,44 +57,54 @@ class NameData(object):
             print item
 
     def name_usage(self, name, start_year=MAX_YEAR, stop_year=MAX_YEAR):
-        q = Query(and_args(eq('name', name), between('year', start_year, stop_year)))
+        q = Query(and_args(eq('name', name),
+                           gte('year', start_year),
+                           lte('year', stop_year)))
         q.limit(1000)
 
         result = self.names.find(q.build())
 
-        return self._aggregate_year_gender(result, start_year, stop_year)
+        return self._aggregate_year_gender(result.objects(), start_year, stop_year)
 
-    def partial_name_search(self, name_prefix):
-        q = Query(regex('name', name_prefix + '*'))
+    def partial_name_search(self, name_prefix, start_year=MAX_YEAR, stop_year=MAX_YEAR):
+        q = Query(and_args(regex('name', name_prefix + '.*'),
+                           gte('year', start_year),
+                           lte('year', stop_year)))
+
         q.limit(1000)
+
+        #print q.build()
 
         result = self.names.find(q.build())
 
-        return self._aggregate_name(result)
+        return self._aggregate_name(result.objects())
 
-    def popularity_by_state(self, state, count, sort_order):
+    def popularity_by_state(self, state, count, sort_order, start_year=MAX_YEAR, stop_year=MAX_YEAR):
         popular = [dict() for i in xrange(count)]
 
         for gender in ['M', 'F']:
-            q = Query(and_args(eq('state', state), eq('gender', gender)))
+            q = Query(and_args(eq('state', state),
+                               eq('gender', gender),
+                               gte('year', start_year),
+                               lte('year', stop_year)))
             q.limit(count)
             q.order({'count': sort_order})
 
-            result = self.names.find(q.build(), result_limit=count)
+            #print q.build()
 
-            for i, item in enumerate(result):
+            result = self.names.find(q.build())
+
+            for i, item in enumerate(result.objects(result_limit=count)):
                 popular[i][gender] = [item['name'], item['count']]
 
         return popular
 
-    def state_popularity(self, count, sort_order):
+    def state_popularity(self, count, sort_order, start_year=MAX_YEAR, stop_year=MAX_YEAR):
         popular = dict()
         for state in states:
-            popular[state] = self.popularity_by_state(state, count, sort_order)
+            popular[state] = self.popularity_by_state(state, count, sort_order, start_year, stop_year)
 
         return popular
-
-
 
 if __name__ == '__main__':
     import sys

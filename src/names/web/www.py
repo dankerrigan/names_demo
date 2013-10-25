@@ -21,39 +21,39 @@ def index():
 
 ## Name Popularity Resources
 
-@app.route('/search/<name_prefix>')
-def name_search(name_prefix):
-    result = g.names.partial_name_search(name_prefix)
+@app.route('/search/<name_prefix>/years/<start>/<stop>')
+def name_search(name_prefix, start, stop):
+    result = g.names.partial_name_search(name_prefix, start_year=int(start), stop_year=int(stop))
 
     return render_template('generic.json', data=result)
 
-@app.route('/usage/<name>/years/<years>')
-def name_usage(name, years):
-    result = g.names.name_usage(name, start_year=MAX_YEAR-int(years)+1)
+@app.route('/usage/<name>/years/<start>/<stop>')
+def name_usage(name, start, stop):
+    result = g.names.name_usage(name, start_year=int(start), stop_year=int(stop))
 
     return render_template('generic.json', data=result)
 
-@app.route('/popularity/state/<state>/most/<count>')
-def most_used_by_state(state, count):
-    result = g.names.popularity_by_state(state, int(count), DESCENDING)
+@app.route('/popularity/state/<state>/most/<count>/years/<start>/<stop>')
+def most_used_by_state(state, count, start, stop):
+    result = g.names.popularity_by_state(state, int(count), DESCENDING, start_year=int(start), stop_year=int(stop))
 
     return render_template('generic.json', data=result)
 
-@app.route('/popularity/state/<state>/least/<count>')
-def least_used_by_state(state, count):
-    result = g.names.popularity_by_state(state, int(count), ASCENDING)
+@app.route('/popularity/state/<state>/least/<count>/years/<start>/<stop>')
+def least_used_by_state(state, count, start, stop):
+    result = g.names.popularity_by_state(state, int(count), ASCENDING, start_year=int(start), stop_year=int(stop))
 
     return render_template('generic.json', data=result)
 
-@app.route('/popularity/states/most/<count>')
-def most_used_states(count):
-    result = g.names.state_popularity(int(count), DESCENDING)
+@app.route('/popularity/states/most/<count>/years/<start>/<stop>')
+def most_used_states(count, start, stop):
+    result = g.names.state_popularity(int(count), DESCENDING, start_year=int(start), stop_year=int(stop))
 
     return render_template('generic.json', data=result)
 
-@app.route('/popularity/states/least/<count>')
-def least_used_states(count):
-    result = g.names.state_popularity(int(count), ASCENDING)
+@app.route('/popularity/states/least/<count>/years/<start>/<stop>')
+def least_used_states(count, start, stop):
+    result = g.names.state_popularity(int(count), ASCENDING, start_year=int(start), stop_year=int(stop))
 
     return render_template('generic.json', data=result)
 

@@ -1,12 +1,16 @@
 // Default Query Years
-var DEFAULT_YEARS = 1
+var MAX_YEAR = 2012;
+var MIN_YEAR = MAX_YEAR-5;
+
+var start_year = 2012;
+var stop_year = 2012;
 
 // Autocomplete for zip field
 $("#name_field").autocomplete({
     source: function (request, response) {
-        var uri = "/search/" + request.term;
+        var uri = "/search/" + request.term + "/years/" + start_year + "/" + stop_year;
         $.ajax({
-            url:"/search/" + request.term,
+            url:uri,
             dataType:"json",
             success: function(data) {
                 response($.map(data, function(count, name) { return {label: name + " " + count, value: name}}) )
@@ -16,12 +20,7 @@ $("#name_field").autocomplete({
     minLength: 2,
     select: function(event, ui) {
         var name = ui.item.value;
-        var range = $("#year_range").val();
-        console.log(range);
-        var years = range.split(' - ');
-        var start_year = years[0];
-        var stop_year = years[1];
-        var uri = "/usage/" + name + "/years/" + (stop_year - start_year);
+        var uri = "/usage/" + name + "/years/" + start_year + "/" + stop_year;
         $.ajax({
             url:uri,
             dataType:"json",
@@ -41,11 +40,13 @@ $("#name_field").autocomplete({
 $(function() {
     $( "#slider_year_range" ).slider({
       range: true,
-      min: 1950,
-      max: 2012,
-      values: [ 2002, 2012 ],
+      min: MIN_YEAR,
+      max: MAX_YEAR,
+      values: [ start_year, stop_year ],
       slide: function( event, ui ) {
         $( "#year_range" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+        start_year = ui.values[0];
+        stop_year = ui.values[1];
       }
     });
     $( "#year_range" ).val( $( "#slider_year_range" ).slider( "values", 0 ) +
