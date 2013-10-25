@@ -27,13 +27,13 @@
     ## Run the web server
     python run_web.py
 
-### Search for names starting with N characters (Dan)
+### Search for names starting with N characters (Dan) between years 2010 and 2012
 
-    curl http://localhost:5000/search/Dan
+    curl http://localhost:5000/search/Dan/years/2010/2012
 
-### Get name usage for for (1) N previous yeras
+### Get name usage between years 2010 and 2012
 
-    curl http://localhost:5000/usage/Daniel/years/1
+    curl http://localhost:5000/usage/Daniel/years/2010/2012
 
 ### Get the top or bottom N (1) names data for a State (WV)
 

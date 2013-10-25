@@ -6,6 +6,8 @@ from riakjson.query import ASCENDING, DESCENDING, and_args, eq, gte, lte, regex
 
 from states import states
 
+from pprint import pprint
+
 MAX_YEAR = 2012
 
 #from collections import OrderedDict
@@ -111,13 +113,16 @@ if __name__ == '__main__':
     names = NameData()
 
     if sys.argv[1] == 'usage':
-        print names.name_usage(sys.argv[2])
+        pprint(names.name_usage(sys.argv[2]))
 
     elif sys.argv[1] == 'partial':
-        print names.partial_name_search(sys.argv[2])
+        pprint(names.partial_name_search(sys.argv[2]))
 
     elif sys.argv[1] == 'most_state':
-        print names.popularity_by_state(sys.argv[2], int(sys.argv[3]), DESCENDING)
+        pprint(names.popularity_by_state(sys.argv[2], int(sys.argv[3]), DESCENDING))
 
     elif sys.argv[1] == 'least_state':
-        print names.popularity_by_state(sys.argv[2], int(sys.argv[3]), ASCENDING)
+        pprint(names.popularity_by_state(sys.argv[2], int(sys.argv[3]), ASCENDING))
+
+    elif sys.argv[1] == 'states_most':
+        pprint(names.state_popularity(int(sys.argv[2]), DESCENDING))
