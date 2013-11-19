@@ -1,7 +1,7 @@
 __author__ = 'dankerrigan'
 
 from riakjson.client import Client
-from riakjson.query import Query
+from riakjson.query import Query, GroupSpec, CategorizeSpec, StatsSpec
 from riakjson.query import ASCENDING, DESCENDING, and_args, eq, gte, lte, regex
 
 from states import states
@@ -59,27 +59,52 @@ class NameData(object):
             print item
 
     def name_usage(self, name, start_year=MAX_YEAR, stop_year=MAX_YEAR):
-        q = Query(and_args(eq('name', name),
-                           gte('year', start_year),
-                           lte('year', stop_year)))
-        q.limit(1000)
+        year_gender = dict()
+        for i in xrange(start_year, stop_year + 1):
+            year_gender[i] = {'M': 0, 'F': 0}
+        for gender in ['M', 'F']:
+            q = Query(and_args(eq('name', name),
+                               eq('gender', gender),
+                               gte('year', start_year),
+                               lte('year', stop_year)))
 
-        result = self.names.find(q.build())
+            categorize = CategorizeSpec()
+            categorize.stats = StatsSpec('year', 'count')
+            q.add_categorization(categorize)
 
-        return self._aggregate_year_gender(result.objects(), start_year, stop_year)
+            q.limit(0)
+
+            result = self.names.find(q.build())
+
+            try:
+                for year, stat in result.categories['year'].items():
+                    year_gender[int(float(year))][gender] = stat['sum']
+            except KeyError:  # No stats exists for year meaning no resuls for that name
+                pass
+
+        return year_gender
 
     def partial_name_search(self, name_prefix, start_year=MAX_YEAR, stop_year=MAX_YEAR):
         q = Query(and_args(regex('name', name_prefix + '.*'),
                            gte('year', start_year),
                            lte('year', stop_year)))
 
-        q.limit(1000)
+        q.limit(0)
+
+        categorize = CategorizeSpec()
+        categorize.stats = StatsSpec('name', 'count')
+
+        q.add_categorization(categorize)
 
         #print q.build()
 
         result = self.names.find(q.build())
 
-        return self._aggregate_name(result.objects())
+        name_count = dict()
+        for field, stat in result.categories['name'].items():
+            name_count[field] = stat['sum']
+
+        return name_count
 
     def popularity_by_state(self, state, count, sort_order, start_year=MAX_YEAR, stop_year=MAX_YEAR):
         popular = [dict() for i in xrange(count)]
@@ -113,7 +138,7 @@ if __name__ == '__main__':
     names = NameData()
 
     if sys.argv[1] == 'usage':
-        pprint(names.name_usage(sys.argv[2]))
+        pprint(names.name_usage(sys.argv[2], start_year=int(sys.argv[3]), stop_year=int(sys.argv[4])))
 
     elif sys.argv[1] == 'partial':
         pprint(names.partial_name_search(sys.argv[2]))
@@ -126,3 +151,6 @@ if __name__ == '__main__':
 
     elif sys.argv[1] == 'states_most':
         pprint(names.state_popularity(int(sys.argv[2]), DESCENDING))
+
+    elif sys.argv[1] == 'states_least':
+        pprint(names.state_popularity(int(sys.argv[2]), ASCENDING))
