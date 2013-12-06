@@ -109,20 +109,37 @@ class NameData(object):
     def popularity_by_state(self, state, count, sort_order, start_year=MAX_YEAR, stop_year=MAX_YEAR):
         popular = [dict() for i in xrange(count)]
 
+
+        q = Query(and_args(eq('state', state),
+                           eq('gender', gender),
+                           gte('year', start_year),
+                           lte('year', stop_year)))
+        q.limit(count)
+        q.order({'count': sort_order})
+
+        result = self.names.find(q.build())
+
+        for i, item in enumerate(result.objects(result_limit=count)):
+            popular[i][gender] = [item['name'], item['count']]
+
+        return popular
+
+    def state_popularity2(self, count, sort_order, start_year=MAX_YEAR, stop_year=MAX_YEAR):
+        popular = dict()
+        for state in states:
+            popular[state] = {'M': 0, 'F': 0}
+
         for gender in ['M', 'F']:
-            q = Query(and_args(eq('state', state),
-                               eq('gender', gender),
+            q = Query(and_args(eq('gender', gender),
                                gte('year', start_year),
                                lte('year', stop_year)))
-            q.limit(count)
-            q.order({'count': sort_order})
-
-            #print q.build()
+            q.add_grouping(GroupSpec(field='state', limit=count, start=0, sort={'count': sort_order}))
+            q.limit = 1000
 
             result = self.names.find(q.build())
 
-            for i, item in enumerate(result.objects(result_limit=count)):
-                popular[i][gender] = [item['name'], item['count']]
+            for state, names in result.groups['state'].items():
+                popular[state][gender] = [[name['name'], name['count']] for name in names]
 
         return popular
 
@@ -150,7 +167,7 @@ if __name__ == '__main__':
         pprint(names.popularity_by_state(sys.argv[2], int(sys.argv[3]), ASCENDING))
 
     elif sys.argv[1] == 'states_most':
-        pprint(names.state_popularity(int(sys.argv[2]), DESCENDING))
+        pprint(names.state_popularity2(int(sys.argv[2]), DESCENDING))
 
     elif sys.argv[1] == 'states_least':
-        pprint(names.state_popularity(int(sys.argv[2]), ASCENDING))
+        pprint(names.state_popularity2(int(sys.argv[2]), ASCENDING))

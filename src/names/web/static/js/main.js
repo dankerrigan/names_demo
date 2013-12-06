@@ -1,6 +1,6 @@
 // Default Query Years
 var MAX_YEAR = 2012;
-var MIN_YEAR = MAX_YEAR-5;
+var MIN_YEAR = MAX_YEAR-10;
 
 var start_year = 2012;
 var stop_year = 2012;

@@ -6,7 +6,7 @@ from data import directory_reader
 from importer import importer, named_tuple_dict_reader
 
 MAX_YEAR = 2012
-START_YEAR = MAX_YEAR - 5
+START_YEAR = MAX_YEAR - 10
 STOP_YEAR = MAX_YEAR
 COLLECTION = 'names'
 

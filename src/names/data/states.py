@@ -9,4 +9,5 @@ states = sorted(['AL','MT','AK','NE','AZ',
                  'KS','SD','KY','TN','LA',
                  'TX','ME','UT','MD','VT',
                  'MA','VA','MI','WA','MN',
-                 'WV','MS','WI','MO','WY'])
+                 'WV','MS','WI','MO','WY',
+                 'DC'])
